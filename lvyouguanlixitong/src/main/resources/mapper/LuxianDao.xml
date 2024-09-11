@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.LuxianDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.luxian_name as luxianName
+        ,a.luxian_uuid_number as luxianUuidNumber
+        ,a.luxian_photo as luxianPhoto
+        ,a.luxian_chufa as luxianChufa
+        ,a.luxian_tujing as luxianTujing
+        ,a.luxian_mudi as luxianMudi
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.luxian_content as luxianContent
+        ,a.luxian_delete as luxianDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.LuxianView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM luxian  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.luxianName != '' and params.luxianName != null and params.luxianName != 'null' ">
+                and a.luxian_name like CONCAT('%',#{params.luxianName},'%')
+            </if>
+            <if test=" params.luxianUuidNumber != '' and params.luxianUuidNumber != null and params.luxianUuidNumber != 'null' ">
+                and a.luxian_uuid_number like CONCAT('%',#{params.luxianUuidNumber},'%')
+            </if>
+            <if test=" params.luxianChufa != '' and params.luxianChufa != null and params.luxianChufa != 'null' ">
+                and a.luxian_chufa like CONCAT('%',#{params.luxianChufa},'%')
+            </if>
+            <if test=" params.luxianTujing != '' and params.luxianTujing != null and params.luxianTujing != 'null' ">
+                and a.luxian_tujing like CONCAT('%',#{params.luxianTujing},'%')
+            </if>
+            <if test=" params.luxianMudi != '' and params.luxianMudi != null and params.luxianMudi != 'null' ">
+                and a.luxian_mudi like CONCAT('%',#{params.luxianMudi},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test=" params.luxianContent != '' and params.luxianContent != null and params.luxianContent != 'null' ">
+                and a.luxian_content like CONCAT('%',#{params.luxianContent},'%')
+            </if>
+            <if test="params.luxianDeleteStart != null and params.luxianDeleteStart != ''">
+                <![CDATA[  and a.luxian_delete >= #{params.luxianDeleteStart}   ]]>
+            </if>
+            <if test="params.luxianDeleteEnd != null and params.luxianDeleteEnd != ''">
+                <![CDATA[  and a.luxian_delete <= #{params.luxianDeleteEnd}   ]]>
+            </if>
+             <if test="params.luxianDelete != null and params.luxianDelete != ''">
+                and a.luxian_delete = #{params.luxianDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

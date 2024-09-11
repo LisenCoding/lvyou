@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.JiudianDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.jiudian_name as jiudianName
+        ,a.jiudian_uuid_number as jiudianUuidNumber
+        ,a.jiudian_photo as jiudianPhoto
+        ,a.jiudian_address as jiudianAddress
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.jiudian_video as jiudianVideo
+        ,a.jiudian_types as jiudianTypes
+        ,a.jiudian_kucun_number as jiudianKucunNumber
+        ,a.jiudian_new_money as jiudianNewMoney
+        ,a.jiudian_content as jiudianContent
+        ,a.jiudian_delete as jiudianDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.JiudianView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM jiudian  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.jiudianName != '' and params.jiudianName != null and params.jiudianName != 'null' ">
+                and a.jiudian_name like CONCAT('%',#{params.jiudianName},'%')
+            </if>
+            <if test=" params.jiudianUuidNumber != '' and params.jiudianUuidNumber != null and params.jiudianUuidNumber != 'null' ">
+                and a.jiudian_uuid_number like CONCAT('%',#{params.jiudianUuidNumber},'%')
+            </if>
+            <if test=" params.jiudianAddress != '' and params.jiudianAddress != null and params.jiudianAddress != 'null' ">
+                and a.jiudian_address like CONCAT('%',#{params.jiudianAddress},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test=" params.jiudianVideo != '' and params.jiudianVideo != null and params.jiudianVideo != 'null' ">
+                and a.jiudian_video like CONCAT('%',#{params.jiudianVideo},'%')
+            </if>
+            <if test="params.jiudianTypes != null and params.jiudianTypes != ''">
+                and a.jiudian_types = #{params.jiudianTypes}
+            </if>
+            <if test="params.jiudianKucunNumberStart != null and params.jiudianKucunNumberStart != ''">
+                <![CDATA[  and a.jiudian_kucun_number >= #{params.jiudianKucunNumberStart}   ]]>
+            </if>
+            <if test="params.jiudianKucunNumberEnd != null and params.jiudianKucunNumberEnd != ''">
+                <![CDATA[  and a.jiudian_kucun_number <= #{params.jiudianKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.jiudianKucunNumber != null and params.jiudianKucunNumber != ''">
+                and a.jiudian_kucun_number = #{params.jiudianKucunNumber}
+             </if>
+            <if test="params.jiudianNewMoneyStart != null ">
+                <![CDATA[  and a.jiudian_new_money >= #{params.jiudianNewMoneyStart}   ]]>
+            </if>
+            <if test="params.jiudianNewMoneyEnd != null ">
+                <![CDATA[  and a.jiudian_new_money <= #{params.jiudianNewMoneyEnd}   ]]>
+            </if>
+            <if test=" params.jiudianContent != '' and params.jiudianContent != null and params.jiudianContent != 'null' ">
+                and a.jiudian_content like CONCAT('%',#{params.jiudianContent},'%')
+            </if>
+            <if test="params.jiudianDeleteStart != null and params.jiudianDeleteStart != ''">
+                <![CDATA[  and a.jiudian_delete >= #{params.jiudianDeleteStart}   ]]>
+            </if>
+            <if test="params.jiudianDeleteEnd != null and params.jiudianDeleteEnd != ''">
+                <![CDATA[  and a.jiudian_delete <= #{params.jiudianDeleteEnd}   ]]>
+            </if>
+             <if test="params.jiudianDelete != null and params.jiudianDelete != ''">
+                and a.jiudian_delete = #{params.jiudianDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
